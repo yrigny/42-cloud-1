@@ -1,0 +1,61 @@
+services:
+  # Nginx terminates TLS and proxies PHP requests to the WordPress container.
+  nginx:
+    image: nginx:42
+    ports:
+      - "443:443"
+    build: ./nginx
+    container_name: nginx
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always
+
+  # WordPress serves the application and uses the shared MariaDB backend.
+  wordpress:
+    image: wordpress:42
+    build: ./wordpress
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always
+
+  # MariaDB stores the WordPress database on the persistent bind mount.
+  mariadb:
+    image: mariadb:42
+    build: ./mariadb
+    container_name: mariadb
+    networks:
+      - inception
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  # Persistent storage lives under deploy_path on the remote host.
+  wordpress:
+    driver_opts:
+      device: "{{ deploy_path }}/data/wordpress"
+      type: none
+      o: bind
+  mariadb:
+    driver_opts:
+      device: "{{ deploy_path }}/data/mariadb"
+      type: none
+      o: bind
+
+networks:
+  inception:

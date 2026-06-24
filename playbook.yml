@@ -1,0 +1,8 @@
+- hosts: cloud1
+  become: true
+
+  roles:
+    # Docker must be installed before the stack can be rendered and started.
+    - docker
+    # The webapp role copies the build contexts and launches the Inception stack.
+    - webapp

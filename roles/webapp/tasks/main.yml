@@ -1,0 +1,60 @@
+---
+- name: Create application directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ deploy_path }}"
+    - "{{ deploy_path }}/data"
+    - "{{ deploy_path }}/data/mariadb"
+    - "{{ deploy_path }}/data/wordpress"
+
+- name: Sync MariaDB build context
+  copy:
+    src: mariadb
+    dest: "{{ deploy_path }}/"
+    mode: '0755'
+
+- name: Sync Nginx build context
+  copy:
+    src: nginx
+    dest: "{{ deploy_path }}/"
+    mode: '0755'
+
+- name: Render Nginx Dockerfile
+  template:
+    src: nginx/Dockerfile.j2
+    dest: "{{ deploy_path }}/nginx/Dockerfile"
+    mode: '0644'
+
+- name: Render Nginx default config
+  template:
+    src: nginx/conf/default.conf.j2
+    dest: "{{ deploy_path }}/nginx/conf/default.conf"
+    mode: '0644'
+
+- name: Sync WordPress build context
+  copy:
+    src: wordpress
+    dest: "{{ deploy_path }}/"
+    mode: '0755'
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ deploy_path }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Template .env file
+  template:
+    src: .env.j2
+    dest: "{{ deploy_path }}/.env"
+    mode: '0600'
+
+- name: Deploy Inception stack
+  shell:
+    cmd: docker compose up -d --build
+    chdir: "{{ deploy_path }}"
+  register: compose_output
+  changed_when: "'Created' in compose_output.stdout or 'Started' in compose_output.stdout"

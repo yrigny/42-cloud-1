@@ -1,0 +1,14 @@
+# penultimate alpine version (https://alpinelinux.org/cloud/)
+FROM	alpine:3.20
+
+# install Nginx and openSSL 
+RUN	apk add --no-cache nginx openssl && \
+	openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+		-keyout /etc/ssl/private/nginx-selfsigned.key \
+		-out /etc/ssl/certs/nginx-selfsigned.crt \
+		-subj "/C=FR/L=Paris/O=42/OU=yrigny/CN={{ domain_name }}"
+
+# copy Nginx conf
+COPY	./conf/default.conf /etc/nginx/http.d/default.conf
+
+CMD	["nginx", "-g", "daemon off;"]
