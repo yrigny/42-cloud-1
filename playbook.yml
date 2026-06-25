@@ -4,5 +4,9 @@
   roles:
     # Docker must be installed before the stack can be rendered and started.
     - docker
-    # The webapp role copies the build contexts and launches the Inception stack.
+    # Service roles prepare their own build contexts before the stack is deployed.
+    - mariadb
+    - wordpress
+    - nginx
+    # The webapp role renders the compose file and starts the Inception stack.
     - webapp

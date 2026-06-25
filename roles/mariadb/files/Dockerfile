@@ -2,7 +2,7 @@
 FROM alpine:3.20
 
 # install MariaDB
-RUN apk add --no-cache bash mariadb mariadb-client mariadb-server-utils \
+RUN apk add --no-cache mariadb mariadb-client mariadb-server-utils \
 	&& mkdir -p /run/mysqld && chown -R mysql:mysql /var/lib/mysql /run/mysqld
 
 # copy entrypoint script

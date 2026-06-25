@@ -7,38 +7,6 @@
   loop:
     - "{{ deploy_path }}"
     - "{{ deploy_path }}/data"
-    - "{{ deploy_path }}/data/mariadb"
-    - "{{ deploy_path }}/data/wordpress"
-
-- name: Sync MariaDB build context
-  copy:
-    src: mariadb
-    dest: "{{ deploy_path }}/"
-    mode: '0755'
-
-- name: Sync Nginx build context
-  copy:
-    src: nginx
-    dest: "{{ deploy_path }}/"
-    mode: '0755'
-
-- name: Render Nginx Dockerfile
-  template:
-    src: nginx/Dockerfile.j2
-    dest: "{{ deploy_path }}/nginx/Dockerfile"
-    mode: '0644'
-
-- name: Render Nginx default config
-  template:
-    src: nginx/conf/default.conf.j2
-    dest: "{{ deploy_path }}/nginx/conf/default.conf"
-    mode: '0644'
-
-- name: Sync WordPress build context
-  copy:
-    src: wordpress
-    dest: "{{ deploy_path }}/"
-    mode: '0755'
 
 - name: Template docker-compose.yml
   template:

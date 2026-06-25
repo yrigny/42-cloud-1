@@ -1,0 +1,12 @@
+---
+- name: Create WordPress data directory
+  file:
+    path: "{{ deploy_path }}/data/wordpress"
+    state: directory
+    mode: '0755'
+
+- name: Sync WordPress build context
+  copy:
+    src: wordpress
+    dest: "{{ deploy_path }}/"
+    mode: '0755'

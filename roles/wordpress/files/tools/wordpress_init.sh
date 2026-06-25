@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # get secrets
 export MYSQL_PASSWORD="${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}"

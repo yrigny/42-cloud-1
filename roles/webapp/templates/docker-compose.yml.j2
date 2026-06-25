@@ -3,6 +3,7 @@ services:
   nginx:
     image: nginx:42
     ports:
+      - "80:80"
       - "443:443"
     build: ./nginx
     container_name: nginx

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # get secrets
 export MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}"
@@ -15,12 +15,14 @@ if [ -z "$(ls -A /var/lib/mysql)" ]; then
 	pid="$!"
 
 	# wait to be fully started
-	for i in {30..0}; do
+	i=30
+	while [ "$i" -ge 0 ]; do
 		if mysqladmin ping --silent; then
 			break
 		fi
 		echo "Waiting for MariaDB to start... ($i)"
 		sleep 1
+		i=$((i - 1))
 	done
 
 	# delete anonymous users, create root user and normal user, create db
@@ -47,12 +49,14 @@ mysqld --user=mysql --skip-networking &
 pid="$!"
 
 # wait to be fully started
-for i in {30..0}; do
+i=30
+while [ "$i" -ge 0 ]; do
 	if mysqladmin ping --silent; then
 		break
 	fi
 	echo "Waiting for MariaDB to start for credential sync... ($i)"
 	sleep 1
+	i=$((i - 1))
 done
 
 mysql -uroot <<-EOSQL

@@ -1,0 +1,12 @@
+---
+- name: Create MariaDB data directory
+  file:
+    path: "{{ deploy_path }}/data/mariadb"
+    state: directory
+    mode: '0755'
+
+- name: Sync MariaDB build context
+  copy:
+    src: mariadb
+    dest: "{{ deploy_path }}/"
+    mode: '0755'
