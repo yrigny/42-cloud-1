@@ -2,6 +2,7 @@
   become: true
 
   roles:
+    - firewall
     # Docker must be installed before the stack can be rendered and started.
     - docker
     # Service roles prepare their own build contexts before the stack is deployed.

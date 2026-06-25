@@ -21,7 +21,7 @@ echo "[INFO] Creating container..."
 
 podman run -d \
     --name "$CONTAINER_NAME" \
-    -v "$HOME/cloud-1:$HOME/cloud-1" \
+    -v "$PWD:$HOME/cloud-1" \
     -v "$HOME/.ssh:$HOME/.ssh:ro" \
     -w "$HOME/cloud-1" \
     "$IMAGE" \
